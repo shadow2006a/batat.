@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Cards</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#ffb6c1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+h2{margin-top:20px;}
+.container{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
+    gap:15px;
+    width:90%;
+    margin:30px 0;
+}
+.card{
+    background:white;
+    height:100px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:bold;
+}
+.card:hover{ transform:scale(1.1);}
+.popup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    width:400px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+    transition:.3s;
+}
+.popup.active{
+    transform:translate(-50%,-50%) scale(1);
+}
+.close{
+    float:left;
+    cursor:pointer;
+    color:red;
+}
+#popupContent p{
+    font-size:22px;
+    font-weight:bold;
+}
+img{
+    width:100%;
+    border-radius:10px;
+    margin-top:10px;
+}
+audio{
+    width:100%;
+    margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<h2>اختار كارت ياحونشايه✨</h2>
+<div class="container" id="cards"></div>
+
+<div class="popup" id="popup">
+    <span class="close" onclick="closeCard()">✖</span>
+    <div id="popupContent"></div>
+</div>
+
+<script>
+// محتوى الكروت
+const cardsData = {
+    1: { type:"text", content:"1 You are my first true love. ❤️" },
+    2: { type:"image", content:"ربنا مايحرمني من مسكه الايد دي❤️❤️", image:"IMG_6049.JPG" },
+    3: { type:"text", content:"صليتي النهارده؟ 3" },
+    4: { type:"text", content:"4 You are my favorite type" },
+    5: { type:"text", content:"5.u need hug?" },
+    6: { type:"text", content:"متخليش حاجه تعكنن يومك 6" },
+    7: { type:"text", content:"فخور بيكي دايما🥰 7" },
+    8: { type:"text", content:"اده اده ملبن ده ولا اي😂 8" },
+    9: { type:"text", content:"انا دايما جنبك❤️ 9" },
+    10:{ type:"text", content:"10 انتي شاطره متخفيش من حاجه" },
+    11:{ type:"text", content:"وجودك جنبي بيخليني أحس إني كسبت الدنيا كلها 11" },
+    12:{ type:"text", content:"لو بس تشوفي نفسك من عيني انا 12" },
+    13:{ type:"text", content:"يلا عوزين مجهود النهارده احسن 13" },
+    14:{ type:"text", content:"لا مش هنخيب بقي الاه جتك نيله 14" },
+    15:{ type:"text", content:"If my heart had a home, it would be with you 15" },
+    16:{ type:"text", content:"You’re my peace in chaos 16" },
+    17:{ type:"text", content:"متاكد انك هترمي افيه مش في مكانه الصح 17" },
+    18:{ type:"text", content:"اشطر ست بيت ياعم 18" },
+    19:{ type:"text", content:"Your eyes tell a story only I can understand 19" },
+    20:{ type:"image", content:"اوف شكل في ملبن النهارده", image:"IMG_8028.png" },
+    21:{ type:"text", content:"احنا الاتنين مجانين مع بعض 21" },
+    22:{ type:"text", content:"بحب اسرح في عنيكي اوي 22" },
+    23:{ type:"text", content:"اش اش ايه الشياكه دي 23" },
+    24:{ type:"text", content:"حقك عليا انا ❤️ 24" },
+    25:{ type:"text", content:"متشليش هم حاجه انا هتصرف 25" },
+    26:{ type:"text", content:"My heart grows fonder of you every day 26" },
+    27:{ type:"text", content:"Being with you makes me feel peace and safety 27" },
+    28:{ type:"text", content:"بس ايه رايك كنت بطير انا صح 28" },
+    29:{ type:"text", content:"انا علمتك ترمي افيهات كدا؟ 29" },
+    30:{ type:"audio", content:"لا بتحرش عادي 30", audio:"New Recording 2.m4a" },
+    31:{ type:"text", content:"ما تنسيش تصحيني 31" },
+    32:{ type:"text", content:"ركزي في نفسك 32" },
+    33:{ type:"text", content:"هتيجي المره دي باذن الله 33" },
+    34:{ type:"text", content:"ام فاريدا الي بحبها 34" },
+    35:{ type:"text", content:"عاوز اتعلم اكتب قصايد عشان اكتبهالك 35" },
+    36:{ type:"text", content:"36 وحشتيني imiss u" },
+    37:{ type:"text", content:"37 بحب اجرب معاكي كل حاجه جديده" },
+    38:{ type:"text", content:"38 هتفضلي دايما بنتي المميزه" },
+    39:{ type:"text", content:"امتا اجي اتقدم بقي وتصوريلي فديو علي اغينه شبكني بدبلته" },
+    40:{ type:"text", content:"40 معنديش اغلي منك اخاف عليه" },
+    41:{ type:"text", content:"تكلي سوشي؟" },
+    42:{ type:"text", content:" 42 ابقي فكريني ناكل كشري سواء في مره اشطا؟" },
+    43:{ type:"text", content:"43 متعرفيش الخير فين اكيد" },
+    44:{ type:"text", content:"44.دايما هسمعك متقلقيش" },
+    45: { type:"text", content:"45:هو القمر نزل الارض ولا ايه؟" },
+    46:{ type:"text", content:"46 You are my first thought in the morning and my last thought before I sleep." },
+    47:{ type:"text", content:"47:قومي قومي وراكي حجات تتعمل مش عوزين كسل" },
+    48:{ type:"text", content:"48 هستني اسمع منك كلام انجليزي ع فكره" },
+    49:{ type:"text", content:"49 ايه بقي مش هنجيب فريدا" },
+    50:{ type:"image", content:"اكتب اللي انت عايزه 50", image:"https://via.placeholder.com/400" },
+    51:{ type:"text", content:"51كل لحظة معاك بتخلي الدنيا بتحلي الدنيا وما فيها" },
+    52:{ type:"text", content:"52كل كلمة منك بتخلي قلبي يرقص من الفرح." },
+    53:{ type:"text", content:"تيجي نجرب حاجه جديده النهارده 53" },
+    54:{ type:"text", content:"54 i'am so happy with you" },
+    55:{ type:"text", content:" 55معنديش اغلي منك يااحلي حونشايه🙈" },
+    56:{ type:"text", content:" 56 كل يوم بحبك اكتر من الي قبله" },
+    57:{ type:"text", content:" 57 قربك أمان، وابتسامتك راحة لكل همومي" },
+    58:{ type:"text", content:" 58 بتمني تكوني مراتي قريب" },
+    59:{ type:"text", content:" 59 وجودك في حياتي بيخليني أحس إن كل حاجة تمام" },
+    60:{ type:"text", content:" 60 مش عوزك زعلانه فهماني" },
+    61:{ type:"text", content:" 61 my love story" },
+    62:{ type:"text", content:"62 بس قوليلي انتي بتحلوي ليه كدا يافاطمه بصوت عبد الغفور البرعي " },
+    63:{ type:"text", content:" 63 ياواد يا تقيل انت" },
+    64:{ type:"text", content:"64 الاب دايما بيحب يشوف بنته احسن منه" },
+    65:{ type:"text", content:"65انتي اجمل ما رائته عيني" },
+    66:{ type:"text", content:"66ايوه يامزهههههه 👏" },
+    67:{ type:"text", content:"67 ربنا بعتك علي شكل هديه ليا" },
+    68:{ type:"text", content:"68 فكره كلمه ست البنات؟" },
+    69:{ type:"text", content:"69 كل حاجه خير متقلقيش" },
+    70:{ type:"text", content:"70 If words could hold my love for you, I would write the whole universe with your name." },
+    71:{ type:"text", content:" 71 بتعصبيني بس بحبك ع فكره" },
+    72:{ type:"text", content:" 72 والله انا مودب بس انتي الي مزه اعمل اي طيب" },
+    73:{ type:"text", content:" 73 ايه الخدود الملبن دي بس ياجماعه" },
+    74:{ type:"text", content:"74 No matter where life takes us, my heart will always find its way to you." },
+    75:{ type:"text", content:" 75 ياحفيظ ايه بس الحلاوه دي " },
+    76:{ type:"text", content:" 76 No one dares to take your place with me." },
+    77:{ type:"text", content:" 77 Just get ready for what's coming. " },
+    78:{ type:"text", content:" 78 اهدي وصلي ع النبي انا معاكي" },
+    79:{ type:"text", content:" 79 I'm proud of you " },
+    80:{ type:"text", content:" 80 Loving you is not a choice, it’s my destiny" },
+    81:{ type:"text", content:" 81 ايه بقي ناويه تعملي ايه احكيلي كدا" },
+    82:{ type:"text", content:" 82 Every moment with you feels like a beautiful dream I never want to wake up from" },
+    83:{ type:"text", content:"جاهزه لي عيد ميلادك؟" },
+    84:{ type:"text", content:"مش هناكل من اكلك بقي" },
+    85:{ type:"text", content:"85 You’re the reason I believe in magic " },
+    86:{ type:"text", content:"86 انتي دايما حلوه" },
+    87:{ type:"text", content:" قومي قومي حضري لينا فطار بلا خالو بلا مالو" },
+    88:{ type:"text", content:" 88 ببقي مجنون وانا معاكي😂" },
+    89:{ type:"text", content:" 89 بتهوني عليا حجات كتيره" },
+    90:{ type:"text", content:" 90 ايه اكتر وقت حبتيني فيه خشي قوليلي يلا" },
+    91:{ type:"text", content:"91 بستني سعات مكلمتك لما بكون مضايق" },
+    92:{ type:"text", content:" 92 مستني الوقت الي ابعتلك فيه محتاجه اي من تحت يا مزه" },
+    93:{ type:"text", content:" 93 ونجومه وقمره✨" },
+    94:{ type:"text", content:" 94 ❤️معرفش شيفاها في نهايه اليوم ولا في اي وقت بس انا بحبك" },
+    95:{ type:"text", content:" 95 عوزك متخفيش من اي حاجه جديده هنخشها سواء" },
+    96:{ type:"text", content:" 96 كل لحظه معاكي بتبقي زي الحلم كدا " },
+    97:{ type:"text", content:" يالهوي ياجدعانننننننن حد يوديني الانعاششششش " },
+    98:{ type:"text", content:" My heart knows nothing but loving you." },
+    99:{ type:"text", content:"Your smile fills my soul with happiness and peace" },
+    100:{ type:"text", content:"اضحكي يابت ما تبقيش كائيبه كدا يخربيتك مزه" },
+
+};
+
+// إنشاء 100 كارت
+const container = document.getElementById("cards");
+for(let i=1;i<=101;i++){
+    let card=document.createElement("div");
+    card.className="card";
+    card.innerText="Card "+i;
+    card.onclick=()=>openCard(i);
+    container.appendChild(card);
+}
+
+const popup=document.getElementById("popup");
+const popupContent=document.getElementById("popupContent");
+
+function openCard(num){
+    popup.classList.add("active");
+    let data = cardsData[num];
+    if(!data){
+        popupContent.innerHTML = `<h3>Card ${num}</h3><p>مفيش محتوى مضاف للكارت ده</p>`;
+        return;
+    }
+    if(data.type==="text"){
+        popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p>`;
+    }
+    if(data.type==="image"){
+        popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p><img src="${data.image}">`;
+    }
+    if(data.type==="audio"){
+        popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p><audio controls src="${data.audio}"></audio>`;
+    }
+}
+
+function closeCard(){
+    popup.classList.remove("active");
+}
+</script>
+</body>
+</html>
