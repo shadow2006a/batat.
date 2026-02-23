@@ -1,72 +1,90 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>100 Cards</title>
-<style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#ffb6c1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-h2{margin-top:20px;}
-.container{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
-    gap:15px;
-    width:90%;
-    margin:30px 0;
-}
-.card{
-    background:white;
-    height:100px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:12px;
-    cursor:pointer;
-    transition:.3s;
-    font-weight:bold;
-}
-.card:hover{ transform:scale(1.1);}
-.popup{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%) scale(0);
-    width:400px;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 20px rgba(0,0,0,.3);
-    transition:.3s;
-}
-.popup.active{
-    transform:translate(-50%,-50%) scale(1);
-}
-.close{
-    float:left;
-    cursor:pointer;
-    color:red;
-}
-#popupContent p{
-    font-size:22px;
-    font-weight:bold;
-}
-img{
-    width:100%;
-    border-radius:10px;
-    margin-top:10px;
-}
-audio{
-    width:100%;
-    margin-top:10px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Cards</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #ffb6c1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 { margin-top: 20px; color: #fff; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            width: 90%;
+            margin: 30px 0;
+        }
+        .card {
+            background: white;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: scale(1.1); background: #fff0f5; }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+            transition: .3s;
+            z-index: 1000;
+        }
+        .popup.active { transform: translate(-50%, -50%) scale(1); }
+        .close {
+            float: right;
+            cursor: pointer;
+            color: red;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #popupContent p {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+        img, video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .btn-full {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #ff69b4;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -79,12 +97,11 @@ audio{
 </div>
 
 <script>
-// محتوى الكروت
 const cardsData = {
     1: { type:"text", content:"1 You are my first true love. ❤️" },
     2: { type:"image", content:"ربنا مايحرمني من مسكه الايد دي❤️❤️", image:"IMG_6049.JPG" },
-    3: { type:"text", content:"3 خشي طمنيني سعات ببقي تعبان ومخنوق بس مش مبين ده" },
-    4: { type:"text", content:"4 صليتي؟" },
+    3: { type:"text", content:"صليتي النهارده؟ 3" },
+    4: { type:"text", content:"4 You are my favorite type" },
     5: { type:"text", content:"5.u need hug?" },
     6: { type:"text", content:"متخليش حاجه تعكنن يومك 6" },
     7: { type:"text", content:"فخور بيكي دايما🥰 7" },
@@ -130,7 +147,7 @@ const cardsData = {
     47:{ type:"text", content:"47:قومي قومي وراكي حجات تتعمل مش عوزين كسل" },
     48:{ type:"text", content:"48 هستني اسمع منك كلام انجليزي ع فكره" },
     49:{ type:"text", content:"49 ايه بقي مش هنجيب فريدا" },
-    50:{ type:"image", content:"اوف دي مزه دي ولا ايه 50", image:"IMG_8028.png" },
+    50:{ type:"image", content:"اكتب اللي انت عايزه 50", image:"https://via.placeholder.com/400" },
     51:{ type:"text", content:"51كل لحظة معاك بتخلي الدنيا بتحلي الدنيا وما فيها" },
     52:{ type:"text", content:"52كل كلمة منك بتخلي قلبي يرقص من الفرح." },
     53:{ type:"text", content:"تيجي نجرب حاجه جديده النهارده 53" },
@@ -177,51 +194,76 @@ const cardsData = {
     94:{ type:"text", content:" 94 ❤️معرفش شيفاها في نهايه اليوم ولا في اي وقت بس انا بحبك" },
     95:{ type:"text", content:" 95 عوزك متخفيش من اي حاجه جديده هنخشها سواء" },
     96:{ type:"text", content:" 96 كل لحظه معاكي بتبقي زي الحلم كدا " },
-    97:{ type:"text", content:" 97 u are my faviret person" },
+    97:{ type:"text", content:" يالهوي ياجدعانننننننن حد يوديني الانعاششششش " },
     98:{ type:"text", content:" My heart knows nothing but loving you." },
     99:{ type:"text", content:"Your smile fills my soul with happiness and peace" },
     100:{ type:"text", content:"اضحكي يابت ما تبقيش كائيبه كدا يخربيتك مزه" },
-
+    101: { type:"text", content:"هينزل هنا فديو يوم 29/3 خشي ع الكارت الي بعده" },
+    102:{ type:"video", content:"اسمعيه للاخر💖", video:"sss.mp4" },
+    103:{ type:"text", content:"دايما كل حاجه هتبقي خير" },
+    104:{ type:"text", content:"حافظك اكتر منك خلي بالك" },
+    105:{ type:"text", content:"شوفتي انك غشاشه يا غشاشه" },
 };
 
-// إنشاء 100 كارت
 const container = document.getElementById("cards");
-for(let i=1;i<=100;i++){
-    let card=document.createElement("div");
-    card.className="card";
-    card.innerText="Card "+i;
-    card.onclick=()=>openCard(i);
+for(let i=1; i<=105; i++){
+    let card = document.createElement("div");
+    card.className = "card";
+    card.innerText = "Card " + i;
+    card.onclick = () => openCard(i);
     container.appendChild(card);
 }
 
-const popup=document.getElementById("popup");
-const popupContent=document.getElementById("popupContent");
+const popup = document.getElementById("popup");
+const popupContent = document.getElementById("popupContent");
 
 function openCard(num){
-    popup.classList.add("active");
     let data = cardsData[num];
-    if(!data){
-        popupContent.innerHTML = `<h3>Card ${num}</h3><p>مفيش محتوى مضاف للكارت ده</p>`;
-        return;
-    }
-    if(data.type==="text"){
+    if(!data) return;
+
+    popup.classList.add("active");
+    
+    if(data.type === "text"){
         popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p>`;
     }
-    if(data.type==="image"){
+    else if(data.type === "image"){
         popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p><img src="${data.image}">`;
     }
-    if(data.type==="audio"){
+    else if(data.type === "audio"){
         popupContent.innerHTML = `<h3>Card ${num}</h3><p>${data.content}</p><audio controls src="${data.audio}"></audio>`;
+    }
+    else if(data.type === "video"){
+        popupContent.innerHTML = `
+            <h3>Card ${num}</h3>
+            <p>${data.content}</p>
+            <video id="cardVideo" controls playsinline>
+                <source src="${data.video}" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو
+            </video>
+            <button class="btn-full" onclick="maximizeVideo()">تكبير الفيديو 📺</button>
+        `;
+    }
+}
+
+function maximizeVideo(){
+    const video = document.getElementById("cardVideo");
+    if (video) {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen();
+        }
     }
 }
 
 function closeCard(){
     popup.classList.remove("active");
+    // إيقاف أي ميديا شغالة عند قفل النافذة
+    popupContent.innerHTML = "";
 }
 </script>
+
 </body>
-
 </html>
-
-
-
